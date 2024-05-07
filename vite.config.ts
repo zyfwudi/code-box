@@ -1,7 +1,6 @@
 import { resolve } from 'path'
 
 import react from '@vitejs/plugin-react-swc'
-import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import { Plugin as importToCDN } from 'vite-plugin-cdn-import'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
@@ -28,9 +27,6 @@ export default defineConfig({
             },
           }
     ),
-    lifecycle === 'report'
-      ? visualizer({ open: true, brotliSize: true, filename: 'report.html' })
-      : null,
     lifecycle !== 'docs'
       ? null
       : importToCDN({
