@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import React, { useState, useRef, useEffect } from 'react'
 
-import { Dialog } from '../../Dialog'
+import { Button, Modal } from 'shineout';
 
 import styles from './index.module.less'
 
@@ -21,6 +21,7 @@ export const FileItem: React.FC<ITabsItem> = (props) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState(value)
   const [creating, setCreating] = useState(props.creating)
+  const [visible, setVisible] = useState<boolean>(false);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
@@ -84,15 +85,41 @@ export const FileItem: React.FC<ITabsItem> = (props) => {
         <>
           <span onDoubleClick={handleDoubleClick}>{name}</span>
           {readOnlyTabs.includes(name) ? null : (
-            <Dialog message={`确定要删除 ${name} 吗?`} onConfirm={() => onRemove(name)}>
-              <span style={{ marginLeft: 5, display: 'flex' }}>
-                <svg width='12' height='12' viewBox='0 0 24 24'>
-                  <line stroke='#999' x1='18' y1='6' x2='6' y2='18'></line>
-                  <line stroke='#999' x1='6' y1='6' x2='18' y2='18'></line>
-                </svg>
-              </span>
-            </Dialog>
+            <span style={{ marginLeft: 5, display: 'flex' }} onClick={() => setVisible(true)}>
+              <svg width='12' height='12' viewBox='0 0 24 24'>
+                <line stroke='#999' x1='18' y1='6' x2='6' y2='18'></line>
+                <line stroke='#999' x1='6' y1='6' x2='18' y2='18'></line>
+              </svg>
+            </span>
           )}
+          <Modal
+            width={400}
+            visible={visible}
+            type='error'
+            onClose={() => setVisible(false)}
+            title='删除'
+            footer={[
+              <Button
+                key='cancel'
+                mode='outline'
+                onClick={() => {
+                  setVisible(false);
+                }}
+              >
+                {'取消'}
+              </Button>,
+              <Button
+                key='ok'
+                type='danger'
+                onClick={() => {
+                  onRemove(name);
+                  setVisible(false);
+                }}
+              >
+                {'删除'}
+              </Button>,
+            ]}
+          >{`确定要删除${name}?`}</Modal>
         </>
       )}
     </div>
