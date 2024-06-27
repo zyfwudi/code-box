@@ -2,8 +2,8 @@ import { transform } from '@babel/standalone'
 
 import { getModuleFile, css2Js, json2Js, beforeTransformCodeHandler } from './utils'
 
-import { ENTRY_FILE_NAME } from '@/Playground/files'
-import type { IFiles } from '@/Playground/types'
+import { ENTRY_FILE_NAME } from '@/playground/files'
+import type { IFiles } from '@/playground/types'
 
 const babelTransform = (filename: string, code: string, files: IFiles) => {
   const _code = beforeTransformCodeHandler(filename, code)

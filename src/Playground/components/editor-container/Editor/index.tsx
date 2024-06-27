@@ -1,16 +1,16 @@
 import MonacoEditor, { Monaco } from '@monaco-editor/react'
+import { editor } from 'monaco-editor'
 import React, { useEffect, useRef, useContext } from 'react'
 
-import { MonacoEditorConfig } from './monacoConfig'
+import { monacoEditorConfig } from './monacoConfig'
 import { useEditor } from './useEditor'
 import { useTypesProgress } from './useProgress'
 
-import { Loading } from '@/Playground/components/Loading'
-import { PlaygroundContext } from '@/Playground/PlaygroundContext'
-import type { IEditorOptions, IFile } from '@/Playground/types'
-import { fileName2Language } from '@/Playground/utils'
-import './jsx-highlight.less'
-import './useEditorWoker'
+// import { Loading } from '@/Playground/components/Loading'
+import { BoxContext } from '../../../box-context'
+import type { IFile } from '../../../types'
+import { fileNameToLanguage } from '@/utils/transform'
+import useStyle from './style'
 
 interface Props {
   file: IFile
@@ -18,13 +18,17 @@ interface Props {
   options?: IEditorOptions
 }
 
+export type IEditorOptions = editor.IStandaloneEditorConstructionOptions & any
+
 export const Editor: React.FC<Props> = (props) => {
   const { file, onChange, options } = props
-  const { theme, files, setSelectedFileName } = useContext(PlaygroundContext)
+  const { files, setSelectedFileName } = useContext(BoxContext)
   const editorRef = useRef<any>(null)
   const { doOpenEditor, loadJsxSyntaxHighlight, autoLoadExtraLib } = useEditor()
   const jsxSyntaxHighlightRef = useRef<any>({ highlighter: null, dispose: null })
   const { total, finished, onWatch } = useTypesProgress()
+
+  const styles = useStyle()
 
   const handleEditorDidMount = async (editor: any, monaco: Monaco) => {
     editorRef.current = editor
@@ -34,8 +38,16 @@ export const Editor: React.FC<Props> = (props) => {
     })
 
     monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-      jsx: monaco.languages.typescript.JsxEmit.Preserve,
+      target: monaco.languages.typescript.ScriptTarget.Latest,
+      allowNonTsExtensions: true,
+      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+      module: monaco.languages.typescript.ModuleKind.CommonJS,
+      noEmit: true,
       esModuleInterop: true,
+      jsx: monaco.languages.typescript.JsxEmit.Preserve,
+      reactNamespace: 'React',
+      allowJs: true,
+      typeRoots: ['node_modules/@types']
     })
 
     // 初始化自定义文件model
@@ -43,7 +55,7 @@ export const Editor: React.FC<Props> = (props) => {
       if (!monaco?.editor?.getModel(monaco.Uri.parse(`file:///${key}`))) {
         monaco?.editor?.createModel(
           files[key].value,
-          fileName2Language(key),
+          fileNameToLanguage(key),
           monaco.Uri.parse(`file:///${key}`)
         )
       }
@@ -61,36 +73,36 @@ export const Editor: React.FC<Props> = (props) => {
     jsxSyntaxHighlightRef.current = loadJsxSyntaxHighlight(editor, monaco)
 
     // 加载类型定义文件
-    autoLoadExtraLib(editor, monaco, file.value, onWatch)
+    autoLoadExtraLib(editor, monaco, file?.value, onWatch)
   }
 
   useEffect(() => {
     editorRef.current?.focus()
     jsxSyntaxHighlightRef?.current?.highlighter?.()
-  }, [file.name])
+  }, [file?.name])
 
   return (
     <>
       <MonacoEditor
-        className='react-playground-editor'
+        className={styles.editor}
         height='100%'
-        theme={`vs-${theme}`}
-        path={file.name}
-        language={file.language}
-        value={file.value}
+        theme={`vs-dark`}
+        path={file?.name}
+        language={file?.language}
+        value={file?.value}
         onChange={onChange}
         onMount={handleEditorDidMount}
         options={{
-          ...MonacoEditorConfig,
+          ...monacoEditorConfig,
           ...{
             ...options,
             theme: undefined,
           },
         }}
       />
-      <div className='react-playground-editor-types-loading'>
+      {/* <div className='react-playground-editor-types-loading'>
         {total > 0 ? <Loading finished={finished}></Loading> : null}
-      </div>
+      </div> */}
     </>
   )
 }

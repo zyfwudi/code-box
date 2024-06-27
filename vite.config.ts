@@ -71,8 +71,7 @@ export default defineConfig({
         : {
             // Could also be a dictionary or array of multiple entry points
             entry: [
-              resolve(__dirname, 'src/Playground/index.tsx'),
-              resolve(__dirname, 'src/Playground/PlaygroundSandbox.tsx'),
+              resolve(__dirname, 'src/Playground/index.tsx')
             ],
             formats: ['es'],
             fileName: (format, entryName) => {

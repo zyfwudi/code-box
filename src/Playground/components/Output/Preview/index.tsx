@@ -3,13 +3,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import iframeRaw from './iframe.html?raw'
 import { getIframeUrl } from './utils'
 
-import { Message } from '@/Playground/components/Message'
-import type { IPreview, IMessageData } from '@/Playground/types'
+// import { Message } from '@/Playground/components/Message'
+import type { IPreview, IMessageData } from '../types'
 
 const iframeUrl = getIframeUrl(iframeRaw)
 
 export const Preview: React.FC<IPreview> = (props) => {
-  const { hidden, data, iframeKey } = props
+  const { data, iframeKey } = props
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [error, setError] = useState('')
 
@@ -46,11 +46,10 @@ export const Preview: React.FC<IPreview> = (props) => {
           height: '100%',
           padding: 0,
           border: 'none',
-          display: hidden ? 'none' : '',
         }}
         sandbox='allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-same-origin'
       />
-      <Message type='error' context={error} />
+      {/* <Message type='error' context={error} /> */}
     </>
   )
 }

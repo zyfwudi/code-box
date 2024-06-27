@@ -1,64 +1,50 @@
-import MonacoEditor from '@monaco-editor/react'
-import React, { useContext, useEffect, useRef, useState } from 'react'
-
+import { useContext, useEffect, useRef, useState } from "react"
+import { useDebouncedFn, useMount } from "@shined/react-use"
+import { BoxContext } from "@/playground/box-context"
 import CompilerWorker from './compiler.worker.ts?worker&inline'
-import { Preview } from './Preview'
-import { ViewSelector } from './ViewSelector'
-import { MonacoEditorConfig } from '../EditorContainer/Editor/monacoConfig'
+import { IMPORT_MAP_FILE_NAME } from "@/playground/files"
+import { Preview } from "./Preview"
+import type { IPreviewData } from "./types"
 
-import { IMPORT_MAP_FILE_NAME } from '@/Playground/files'
-import { PlaygroundContext } from '@/Playground/PlaygroundContext'
-import type { IOutput, IPreviewData } from '@/Playground/types'
-import { debounce } from '@/Playground/utils'
+export interface IPreview {}
 
-const viewTypes = ['PREVIEW', 'JS']
+const Output = (props: IPreview) => {
+  const {} = props
 
-export const Output: React.FC<IOutput> = (props) => {
-  const { showCompileOutput = true } = props
-  const { files, theme, selectedFileName } = useContext(PlaygroundContext)
-  const [activedType, setActivedType] = useState('PREVIEW')
+  const { files, selectedFileName } = useContext(BoxContext)
+
   const compilerRef = useRef<Worker | null>(null)
   const [compiledFiles, setCompiledFiles] = useState<IPreviewData>()
-  const [compiledCode, setCompiledCode] = useState('')
 
-  const handleViewChange = (type: string) => {
-    setActivedType(type)
-  }
+  const sendCompiledCode = useDebouncedFn(() => compilerRef.current?.postMessage(files), { wait: 50})
 
-  const sendCompiledCode = debounce(() => {
-    if (activedType === 'PREVIEW') compilerRef.current?.postMessage(files)
-    if (activedType === 'JS') {
-      compilerRef.current?.postMessage(files[selectedFileName].value)
-    }
-  }, 50)
-
-  useEffect(() => {
+  useMount(() => {
     if (!compilerRef.current) {
       compilerRef.current = new CompilerWorker()
       compilerRef.current.addEventListener('message', ({ data }: { data: any }) => {
         if (data.type === 'UPDATE_FILES') {
           try {
-            JSON.parse(files[IMPORT_MAP_FILE_NAME].value)
-            data.data.importmap = files[IMPORT_MAP_FILE_NAME].value
+            JSON.parse(files[IMPORT_MAP_FILE_NAME]?.value)
+            data.data.importmap = files[IMPORT_MAP_FILE_NAME]?.value
           } catch (error) {
             console.error('importmap 解析错误:', error)
           }
           setCompiledFiles(data)
         } else if (data.type === 'UPDATE_FILE') {
-          setCompiledCode(data.data)
+
         } else if (data.type === 'ERROR') {
           console.log(data)
         }
       })
     }
-  }, [])
+  })
 
   useEffect(() => {
     sendCompiledCode()
-  }, [activedType, files])
+  }, [files])
 
   useEffect(() => {
-    if (selectedFileName === IMPORT_MAP_FILE_NAME || activedType === 'PREVIEW') return
+    if (selectedFileName === IMPORT_MAP_FILE_NAME ) return
     if (['javascript', 'typescript'].includes(files[selectedFileName]?.language)) {
       compilerRef.current?.postMessage(files[selectedFileName]?.value)
     } else {
@@ -67,34 +53,11 @@ export const Output: React.FC<IOutput> = (props) => {
   }, [selectedFileName])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <ViewSelector
-        items={viewTypes}
-        value={activedType}
-        onChange={handleViewChange}
-        hidden={!showCompileOutput}
-      />
-
-      <Preview
-        iframeKey={files[IMPORT_MAP_FILE_NAME].value}
-        hidden={activedType !== 'PREVIEW'}
-        data={compiledFiles}
-      />
-      {showCompileOutput ? (
-        <div style={{ display: activedType !== 'JS' ? 'none' : '', height: '100%' }}>
-          <MonacoEditor
-            className='react-playground-editor'
-            height='100%'
-            theme={`vs-${theme}`}
-            value={compiledCode}
-            language='javascript'
-            options={{
-              ...MonacoEditorConfig,
-              readOnly: true,
-            }}
-          />
-        </div>
-      ) : null}
-    </div>
+    <Preview
+      iframeKey={files[IMPORT_MAP_FILE_NAME]?.value}
+      data={compiledFiles}
+    />
   )
 }
+
+export default Output

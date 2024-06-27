@@ -1,12 +1,11 @@
-// import { PlaygroundSandbox } from './Playground/PlaygroundSandbox'
-import { Playground as PlaygroundSandbox } from '@/Playground'
+import Playground from './playground'
+import './App.css'
 
 function App() {
-  // const handleFilesHash = (hash: string) => {
-  //   window.location.hash = hash
-  // }
 
-  return <PlaygroundSandbox saveOnUrl={false} />
+  return (
+    <Playground />
+  )
 }
 
 export default App

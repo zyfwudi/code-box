@@ -1,4 +1,4 @@
-import type { IFile, IFiles } from '@/Playground/types'
+import type { IFile, IFiles } from '@/playground/types'
 
 export const getModuleFile = (files: IFiles, moduleName: string) => {
   let _moduleName = moduleName.split('./').pop() || ''
