@@ -30,7 +30,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "emitDeclarationOnly": true,
+    "declaration": true, 
+    "declarationDir": "dist"
   },
   "references": [
     {

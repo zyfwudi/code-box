@@ -34,7 +34,7 @@ export async function createATA() {
         // @ts-ignore
         result = fetch(input, init)
       } catch (error) {
-        console.error('Error fetching data:', error)
+        // console.error('Error fetching data:', error)
       }
       return result
     },

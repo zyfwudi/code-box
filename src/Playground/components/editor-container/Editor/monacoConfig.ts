@@ -33,7 +33,7 @@ export const monacoEditorConfig: editor.IEditorOptions & editor.IGlobalEditorOpt
   smoothScrolling: true,
   stickyTabStops: true,
   fontLigatures: true,
-  fontSize: 14,
+  fontSize: 13,
   fontFamily:
     "'FiraCode Nerd Font Mono', FiraCode, 思源黑体, 平方, 微软雅黑, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
   quickSuggestions: false,

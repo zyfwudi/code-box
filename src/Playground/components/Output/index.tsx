@@ -3,7 +3,7 @@ import { useDebouncedFn, useMount } from "@shined/react-use"
 import { BoxContext } from "@/playground/box-context"
 import CompilerWorker from './compiler.worker.ts?worker&inline'
 import { IMPORT_MAP_FILE_NAME } from "@/playground/files"
-import { Preview } from "./Preview"
+import { Preview } from "./preview"
 import type { IPreviewData } from "./types"
 
 export interface IPreview {}
@@ -27,13 +27,13 @@ const Output = (props: IPreview) => {
             JSON.parse(files[IMPORT_MAP_FILE_NAME]?.value)
             data.data.importmap = files[IMPORT_MAP_FILE_NAME]?.value
           } catch (error) {
-            console.error('importmap 解析错误:', error)
+            console.error('importmap parse error:', error)
           }
           setCompiledFiles(data)
         } else if (data.type === 'UPDATE_FILE') {
 
         } else if (data.type === 'ERROR') {
-          console.log(data)
+          // console.log(data)
         }
       })
     }

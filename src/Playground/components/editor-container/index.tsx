@@ -12,15 +12,15 @@ export interface IEditorContainer {
 const EditorContainer = (props: IEditorContainer) => {
   const { showFileSelector = true } = props
   const { files, selectedFileName, setFiles, setSelectedFileName } = useContext(BoxContext)
+  const styles = useStyle()
 
   const file = useMemo(() => files[selectedFileName], [files, selectedFileName])
 
   // const [error, setError] = useState<string>('')
 
-  const styles = useStyle()
-
   const handleEditorChange = useDebouncedFn((value?: string) => {
     if (!value) return
+
     files[file.name].value = value
     setFiles({...files})
   }, { wait: 500 })

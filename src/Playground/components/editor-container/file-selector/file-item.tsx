@@ -1,69 +1,29 @@
-import { useState, useRef, useEffect } from 'react'
 import useStyle from '../style'
-import { IReturnVoid } from '@/utils/types'
 import { Tag, Input } from 'shineout'
-import { useStableFn } from '@shined/react-use'
-
-export interface IFileItem {
-  value: string
-  readOnlyTabs?: string[]
-  creating: boolean
-  active: boolean
-  onValidate: (name: string, prevName: string) => boolean
-  onClick: () => void
-  onOk: IReturnVoid<string>
-  setConformVisible: IReturnVoid<string>
-  onCancel: () => void
-}
+import type { IFileItem } from './types'
+import useFileItem from './hooks/use-file-item'
 
 const FileItem = (props: IFileItem) => {
   const { value, readOnlyTabs = [''], active, onValidate, onClick, onOk, setConformVisible, onCancel } = props
   const styles = useStyle()
 
-  const [name, setName] = useState<string>(value)
-  const [creating, setCreating] = useState<boolean>(props.creating)
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const cancelFileName = useStableFn(() => {
-    setName(value)
-    setCreating(false)
-    onCancel()
+  const {
+    name,
+    creating,
+    inputRef,
+    handleDoubleClick,
+    handleKeyDown,
+    changeFileName,
+    setName
+  } = useFileItem({
+    value,
+    readOnlyTabs,
+    active,
+    creating: props.creating,
+    onValidate,
+    onOk,
+    onCancel
   })
-
-  const changeFileName = useStableFn(() => {
-    if (!creating) return
-    if (!onValidate(name, value)) return
-
-    if (name === value && active) {
-      setCreating(false)
-      return
-    }
-    onOk(name)
-
-    setCreating(false)
-  })
-
-  const handleDoubleClick = useStableFn(() => {
-    if (readOnlyTabs.includes(name)) return;
-    setCreating(true);
-    setTimeout(() => {
-      inputRef?.current?.focus();
-    }, 0);
-  });
-
-  const handleKeyDown = useStableFn((event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      changeFileName();
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      cancelFileName();
-    }
-  })
-
-  useEffect(() => {
-    inputRef?.current?.focus();
-  }, [])
 
   return (
     creating ? (
