@@ -3,7 +3,7 @@ import useStyle from './style'
 import { BoxContext } from '@/playground/box-context'
 import { useDebouncedFn, useStableFn } from '@shined/react-use'
 import FileSelector from './file-selector'
-import { Editor } from './Editor'
+import { Editor } from './editor'
 
 export interface IEditorContainer {
   showFileSelector?: boolean

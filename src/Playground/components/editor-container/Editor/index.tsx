@@ -1,5 +1,5 @@
 import MonacoEditor, { Monaco } from '@monaco-editor/react'
-import { editor } from 'monaco-editor'
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import React, { useEffect, useRef, useContext } from 'react'
 
 import { monacoEditorConfig } from './monacoConfig'
