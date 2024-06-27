@@ -36,10 +36,10 @@ dependencies:
     specifier: ^1.2.0
     version: 1.2.0
   react:
-    specifier: ^18.3.1
+    specifier: '>=18.2.0'
     version: 18.3.1
   react-dom:
-    specifier: ^18.3.1
+    specifier: '>=18.2.0'
     version: 18.3.1(react@18.3.1)
   react-jss:
     specifier: ^10.10.0
@@ -157,6 +157,9 @@ devDependencies:
   vite-plugin-cdn-import:
     specifier: ^0.3.5
     version: 0.3.5(rollup@2.79.1)
+  vite-plugin-commonjs:
+    specifier: ^0.10.1
+    version: 0.10.1
   vite-plugin-css-injected-by-js:
     specifier: ^3.3.0
     version: 3.5.1(vite@4.5.3)
@@ -3510,6 +3513,12 @@ packages:
       sourcemap-codec: 1.4.8
     dev: true
 
+  /magic-string@0.30.10:
+    resolution: {integrity: sha512-iIRwTIf0QKV3UAnYK4PU8uiEc4SRh5jX0mwpIwETPpHdhVM4f53RSwS/vXvN1JhGX+Cs7B8qIq3d6AH49O5fAQ==}
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.4.15
+    dev: true
+
   /make-dir@2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
     engines: {node: '>=6'}
@@ -5044,12 +5053,30 @@ packages:
       - rollup
     dev: true
 
+  /vite-plugin-commonjs@0.10.1:
+    resolution: {integrity: sha512-taP8R9kYGlCW5OzkVR0UIWRCnG6rSxeWWuA7tnU5b9t5MniibOnDY219NhisTeDhJAeGT8cEnrhVWZ9A5yD+vg==}
+    dependencies:
+      acorn: 8.11.3
+      fast-glob: 3.3.2
+      magic-string: 0.30.10
+      vite-plugin-dynamic-import: 1.5.0
+    dev: true
+
   /vite-plugin-css-injected-by-js@3.5.1(vite@4.5.3):
     resolution: {integrity: sha512-9ioqwDuEBxW55gNoWFEDhfLTrVKXEEZgl5adhWmmqa88EQGKfTmexy4v1Rh0pAS6RhKQs2bUYQArprB32JpUZQ==}
     peerDependencies:
       vite: '>2.0.0-0'
     dependencies:
       vite: 4.5.3(@types/node@20.12.10)(less@4.2.0)
+    dev: true
+
+  /vite-plugin-dynamic-import@1.5.0:
+    resolution: {integrity: sha512-Qp85c+AVJmLa8MLni74U4BDiWpUeFNx7NJqbGZyR2XJOU7mgW0cb7nwlAMucFyM4arEd92Nfxp4j44xPi6Fu7g==}
+    dependencies:
+      acorn: 8.11.3
+      es-module-lexer: 1.5.2
+      fast-glob: 3.3.2
+      magic-string: 0.30.10
     dev: true
 
   /vite@4.5.3(@types/node@20.12.10)(less@4.2.0):

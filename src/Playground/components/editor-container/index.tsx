@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useMemo } from 'react'
 import useStyle from './style'
 import { BoxContext } from '@/playground/box-context'
 import { useDebouncedFn, useStableFn } from '@shined/react-use'
@@ -15,7 +15,7 @@ const EditorContainer = (props: IEditorContainer) => {
 
   const file = useMemo(() => files[selectedFileName], [files, selectedFileName])
 
-  const [error, setError] = useState<string>('')
+  // const [error, setError] = useState<string>('')
 
   const styles = useStyle()
 
@@ -27,7 +27,7 @@ const EditorContainer = (props: IEditorContainer) => {
 
   const handleTabsChange = useStableFn((fileName: string) => setSelectedFileName(fileName))
 
-  const handleTabsError = useStableFn((error: string) => setError(error))
+  // const handleTabsError = useStableFn((error: string) => setError(error))
 
   return (
     <div className={styles.container}>

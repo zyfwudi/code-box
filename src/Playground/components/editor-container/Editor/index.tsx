@@ -11,6 +11,7 @@ import { BoxContext } from '../../../box-context'
 import type { IFile } from '../../../types'
 import { fileNameToLanguage } from '@/utils/transform'
 import useStyle from './style'
+import './useEditorWoker'
 
 interface Props {
   file: IFile
@@ -26,7 +27,7 @@ export const Editor: React.FC<Props> = (props) => {
   const editorRef = useRef<any>(null)
   const { doOpenEditor, loadJsxSyntaxHighlight, autoLoadExtraLib } = useEditor()
   const jsxSyntaxHighlightRef = useRef<any>({ highlighter: null, dispose: null })
-  const { total, finished, onWatch } = useTypesProgress()
+  const { onWatch } = useTypesProgress()
 
   const styles = useStyle()
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import iframeRaw from './iframe.html?raw'
 import { getIframeUrl } from './utils'
@@ -11,20 +11,20 @@ const iframeUrl = getIframeUrl(iframeRaw)
 export const Preview: React.FC<IPreview> = (props) => {
   const { data, iframeKey } = props
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const [error, setError] = useState('')
+  // const [error, setError] = useState('')
 
   useEffect(() => {
     if (data) iframeRef.current?.contentWindow?.postMessage(data)
   }, [data])
 
   const handleMessage = (msg: IMessageData) => {
-    const { type, message } = msg.data
+    const { type } = msg.data
     if (type === 'LOADED') {
       iframeRef.current?.contentWindow?.postMessage(data)
     } else if (type === 'ERROR') {
-      setError(message)
+      // setError(message)
     } else {
-      setError('')
+      // setError('')
     }
   }
 

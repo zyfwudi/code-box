@@ -4,16 +4,15 @@ import react from '@vitejs/plugin-react-swc'
 import { defineConfig } from 'vite'
 import { Plugin as importToCDN } from 'vite-plugin-cdn-import'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
+import commonjs from 'vite-plugin-commonjs'
 
 const lifecycle = process.env.npm_lifecycle_event
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
-  define: {
-    'process.env': {},
-  },
   plugins: [
+    commonjs(),
     react(),
     cssInjectedByJsPlugin(
       lifecycle === 'docs'
@@ -21,8 +20,7 @@ export default defineConfig({
         : {
             jsAssetsFilterFunction: function customJsAssetsfilterFunction(outputChunk) {
               return (
-                outputChunk.fileName === 'index.mjs' ||
-                outputChunk.fileName === 'PlaygroundSandbox.mjs'
+                outputChunk.fileName === 'index.mjs'
               )
             },
           }
@@ -44,13 +42,6 @@ export default defineConfig({
           ],
         }),
   ],
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-      },
-    },
-  },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
@@ -60,6 +51,9 @@ export default defineConfig({
     exclude: lifecycle === 'dev' ? null : ['react', 'react-dom'],
   },
   build: {
+    commonjsOptions: {
+      transformMixedEsModules: true
+    },
     minify: true,
     outDir: lifecycle === 'docs' ? 'docs' : 'dist',
     rollupOptions: {
