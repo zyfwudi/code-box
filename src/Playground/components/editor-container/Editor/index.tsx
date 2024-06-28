@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useContext } from 'react'
 
 import { monacoEditorConfig } from './monacoConfig'
 import { useEditor } from './useEditor'
-import { useTypesProgress } from './useProgress'
+// import { useTypesProgress } from './useProgress'
 
 // import { Loading } from '@/Playground/components/Loading'
 import { BoxContext } from '../../../box-context'
@@ -25,9 +25,9 @@ export const Editor: React.FC<Props> = (props) => {
   const { file, onChange, options } = props
   const { files, setSelectedFileName } = useContext(BoxContext)
   const editorRef = useRef<any>(null)
-  const { doOpenEditor, loadJsxSyntaxHighlight, autoLoadExtraLib } = useEditor()
+  const { doOpenEditor, loadJsxSyntaxHighlight } = useEditor()
   const jsxSyntaxHighlightRef = useRef<any>({ highlighter: null, dispose: null })
-  const { onWatch } = useTypesProgress()
+  // const { onWatch } = useTypesProgress()
 
   const styles = useStyle()
 
@@ -74,7 +74,10 @@ export const Editor: React.FC<Props> = (props) => {
     jsxSyntaxHighlightRef.current = loadJsxSyntaxHighlight(editor, monaco)
 
     // 加载类型定义文件
-    autoLoadExtraLib(editor, monaco, file?.value, onWatch)
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+      '<<react-definition-file>>',
+      'file:///node_modules/@react/types/index.d.ts',
+    )
   }
 
   useEffect(() => {

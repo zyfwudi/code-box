@@ -46,7 +46,7 @@ export const useEditor = () => {
    * @param defaultValue 默认代码（初始化后现加载默认代码中import包的types文件）
    * @param onWatch 开始监听下载进度
    */
-  const autoLoadExtraLib = async (editor: any, monaco: any, defaultValue: string, onWatch: any) => {
+  const autoLoadExtraLib = async (editor: any, monaco: any, _defaultValue: string, onWatch: any) => {
     // 自动加载第三方包的类型定义文件
     const typeHelper = await createATA()
     // 开始监听下载进度
@@ -61,7 +61,7 @@ export const useEditor = () => {
     }
 
     typeHelper.addListener('receivedFile', addLibraryToRuntime)
-    typeHelper.acquireType(defaultValue)
+    // typeHelper.acquireType(defaultValue)
 
     return typeHelper
   }

@@ -11,11 +11,25 @@ export const IMPORT_MAP_FILE_NAME = 'import-map.json';
 
 export const ENTRY_FILE_NAME = 'main.tsx'
 
+const getHashParams = () => {
+  const hash = window.location.hash.substring(1);
+
+  const queryStart = hash.indexOf('?');
+  if (queryStart !== -1) {
+
+      const queryString = hash.substring(queryStart + 1);
+
+      const params = new URLSearchParams(queryString);
+      return params;
+  }
+  return new URLSearchParams();
+}
+
 export const getFilesFromUrl = () => {
   let files: IFiles | undefined
   try {
     if (typeof window !== 'undefined') {
-      const hash = new URL(window.location.href).searchParams.get('code')
+      const hash = getHashParams().get('code')
       if (hash) files = JSON.parse(atou(hash))
     }
   } catch (error) {
