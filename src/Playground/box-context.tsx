@@ -16,7 +16,7 @@ const BoxProvider = (props: BoxContextProps) => {
     saveOnUrl,
     selectedFileNameOrigin: initialContext.selectedFileName!
   })
-
+  
   const value = useMemo(() => ({
     ...rest
   }), [rest.filesHash, rest.files, rest.selectedFileName])

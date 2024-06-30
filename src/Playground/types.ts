@@ -27,13 +27,21 @@ export interface ICustomFiles {
       };
 }
 
+export type IImportMap = { imports: Record<string, string> }
+
 export interface IPlayground {
   files?: ICustomFiles;
+  importMap?: IImportMap
   saveOnUrl?: boolean;
+  style?: React.CSSProperties
+  className?: string
+  showHeader?: boolean
+  importUrl?: string
+  onFilesChange?: (url: string) => void
 }
 
-export interface ICodeBox extends Omit<IPlayground, 'saveOnUrl'> {
-  style?: React.CSSProperties
+export interface ICodeBox extends Omit<IPlayground, 'saveOnUrl' | 'showHeader'> {
+  
 }
 
 export interface IBoxContext {

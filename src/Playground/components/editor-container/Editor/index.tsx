@@ -74,6 +74,13 @@ export const Editor: React.FC<Props> = (props) => {
     jsxSyntaxHighlightRef.current = loadJsxSyntaxHighlight(editor, monaco)
 
     // 加载类型定义文件
+    // autoLoadExtraLib(editor, monaco, file?.value, onWatch)
+
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: false,
+      noSyntaxValidation: false,
+    })
+    
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
       '<<react-definition-file>>',
       'file:///node_modules/@react/types/index.d.ts',

@@ -1,16 +1,20 @@
-import { useState } from 'react'
+import { Alert } from 'shineout';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default () => {
   return (
-    <>
-      <h1>Hello World</h1>
-      <div>
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-      </div>
-    </>
-  )
-}
-
-export default App
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, padding: '20px' }}>
+      <Alert icon type='info' style={{ width: 'calc(50% - 16px)' }}>
+        This is informative text.
+      </Alert>
+      <Alert icon type='success' style={{ width: 'calc(50% - 16px)' }}>
+        This is success text.
+      </Alert>
+      <Alert icon type='warning' style={{ width: 'calc(50% - 16px)' }}>
+        This is warning text.
+      </Alert>
+      <Alert icon type='danger' style={{ width: 'calc(50% - 16px)' }}>
+        This is danger text.
+      </Alert>
+    </div>
+  );
+};

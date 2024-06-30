@@ -27,17 +27,17 @@ export async function createATA() {
     projectName: 'monaco-ts',
     typescript: ts,
     logger: console,
-    // fetcher(input, init) {
-    //   // console.log('fetching =>', input, init);
-    //   let result: any
-    //   try {
-    //     // @ts-ignore
-    //     result = fetch(input, init)
-    //   } catch (error) {
-    //     // console.error('Error fetching data:', error)
-    //   }
-    //   return result
-    // },
+    fetcher(input, init) {
+      // console.log('fetching =>', input, init);
+      let result: any
+      try {
+        // @ts-ignore
+        result = fetch(input, init)
+      } catch (error) {
+        // console.error('Error fetching data:', error)
+      }
+      return result
+    },
     delegate: {
       receivedFile: (code, path) => {
         delegateListener.receivedFile.forEach((fn) => fn(code, path))

@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useStableFn } from '@shined/react-use'
-import { maxSequenceTabName } from '@/utils/util'
+import { maxSequenceTabName } from '@/utils/utils'
 import { IMPORT_MAP_FILE_NAME, ENTRY_FILE_NAME } from '@/playground/files'
 import type { UseFileSelectorProps } from '../types'
-
 
 const useFileSelector = (props: UseFileSelectorProps) => {
   const { files, onChange, onError, addFile, updateFileName } = props

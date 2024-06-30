@@ -1,62 +1,39 @@
-import { useContext, useEffect, useRef, useState } from "react"
-import { useDebouncedFn, useMount } from "@shined/react-use"
+import { useContext, useMemo } from "react"
 import { BoxContext } from "@/playground/box-context"
-import CompilerWorker from './compiler.worker.ts?worker&inline'
 import { IMPORT_MAP_FILE_NAME } from "@/playground/files"
 import { Preview } from "./preview"
-import type { IPreviewData } from "./types"
+import type { IOutput } from "./types"
+import { getMergedCustomFiles } from "@/playground/utils"
+import useOutput from "./hooks/use-output"
+import useStyle from "./style"
+import classNames from "classnames"
 
-export interface IPreview {}
+const Output = (props: IOutput) => {
+  const { files: filesProps, importMap: importMapProps, style, className, importUrl } = props
 
-const Output = (props: IPreview) => {
-  const {} = props
+  const styles = useStyle()
 
-  const { files, selectedFileName } = useContext(BoxContext)
+  const { files: filesContext } = useContext(BoxContext)
 
-  const compilerRef = useRef<Worker | null>(null)
-  const [compiledFiles, setCompiledFiles] = useState<IPreviewData>()
+  const files = useMemo(() => {
+    if (!filesProps) return filesContext
 
-  const sendCompiledCode = useDebouncedFn(() => compilerRef.current?.postMessage(files), { wait: 50})
+    return getMergedCustomFiles(filesProps, importMapProps) || filesContext
+  }, [filesProps, filesContext])
 
-  useMount(() => {
-    if (!compilerRef.current) {
-      compilerRef.current = new CompilerWorker()
-      compilerRef.current.addEventListener('message', ({ data }: { data: any }) => {
-        if (data.type === 'UPDATE_FILES') {
-          try {
-            JSON.parse(files[IMPORT_MAP_FILE_NAME]?.value)
-            data.data.importmap = files[IMPORT_MAP_FILE_NAME]?.value
-          } catch (error) {
-            console.error('importmap parse error:', error)
-          }
-          setCompiledFiles(data)
-        } else if (data.type === 'UPDATE_FILE') {
+  const {
+    compiledFiles
+  } = useOutput({ files, importUrl })
 
-        } else if (data.type === 'ERROR') {
-          // console.log(data)
-        }
-      })
-    }
-  })
-
-  useEffect(() => {
-    sendCompiledCode()
-  }, [files])
-
-  useEffect(() => {
-    if (selectedFileName === IMPORT_MAP_FILE_NAME ) return
-    if (['javascript', 'typescript'].includes(files[selectedFileName]?.language)) {
-      compilerRef.current?.postMessage(files[selectedFileName]?.value)
-    } else {
-      compilerRef.current?.postMessage('')
-    }
-  }, [selectedFileName])
+  const rootClassName = classNames(styles.output, className)
 
   return (
-    <Preview
-      iframeKey={files[IMPORT_MAP_FILE_NAME]?.value}
-      data={compiledFiles}
-    />
+    <div className={rootClassName} style={style}>
+      <Preview
+        iframeKey={files[IMPORT_MAP_FILE_NAME]?.value}
+        data={compiledFiles}
+      />
+    </div>
   )
 }
 

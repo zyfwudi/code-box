@@ -2,6 +2,7 @@ import { createUseStyles } from 'react-jss';
 import { JsStyles } from '@/utils/types';
 
 export interface PlaygorundClasses {
+  playground: string
   wrapper: string
   header: string
   title: string
@@ -12,12 +13,18 @@ export interface PlaygorundClasses {
 type PlaygorundStyles = JsStyles<keyof PlaygorundClasses>;
 
 const styles: PlaygorundStyles = {
-  wrapper: {
-    width: '100vw',
+  playground: {
+    display: 'flex',
+    flexDirection: 'column',
     height: '100vh',
+    width: '100vw',
+    overflow: 'hidden',
+  },
+  wrapper: {
+    width: '100%',
+    flex: 1,
     boxSizing: 'border-box',
     overflow: 'hidden'
-    // border: '1px solid #000',
   },
   header: {
     height: '38px',

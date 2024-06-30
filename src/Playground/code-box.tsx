@@ -8,13 +8,14 @@ import { MAIN_FILE_NAME } from './files';
 import SplitPane from './components/split-pane';
 import EditorContainer from './components/editor-container';
 import Output from './components/output'
+import { getCustomActiveFile, getMergedCustomFiles } from './utils';
 
 const CodeBox = (props: ICodeBox) => {
+  const { files: filesProps, importMap, style, importUrl, onFilesChange } = props
+
   const styles = useStyles()
 
-  const { files: filesProps, style } = props
-
-  const { filesHash } = useContext(BoxContext)
+  const { filesHash, setFiles, setSelectedFileName } = useContext(BoxContext)
 
   useEffect(() => {
     if (filesProps && !filesProps?.[MAIN_FILE_NAME]) {
@@ -22,15 +23,23 @@ const CodeBox = (props: ICodeBox) => {
         `Missing required property : '${MAIN_FILE_NAME}' is a mandatory property for 'files'`,
       );
     } else if (filesProps) {
+      const newFiles = getMergedCustomFiles(filesProps, importMap)
 
-     }
+      if (newFiles) setFiles(newFiles)
+      
+      const selectedFileName = getCustomActiveFile(filesProps)
+      
+      if (selectedFileName) setSelectedFileName(selectedFileName)    
+    }
   }, [filesProps])
 
   // useMount(() => {
   //   if (!filesProps) setFiles(initFiles)
   // })
 
-  useEffect(() => {}, [filesHash])
+  useEffect(() => {
+    onFilesChange?.(filesHash)
+  }, [filesHash])
 
   useMount(() => {
     setToken({
@@ -43,7 +52,7 @@ const CodeBox = (props: ICodeBox) => {
     <div className={styles.wrapper} id='code-box-wrapper' style={style}>
       <SplitPane>
         <EditorContainer />
-        <Output />
+        <Output importUrl={importUrl} />
       </SplitPane>
     </div>
   )

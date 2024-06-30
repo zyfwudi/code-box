@@ -38,32 +38,45 @@ const filterVersion = (str: string): string => {
   return str.replace(/^[~*^]/, "")
 }
 
-const parseImportMap = (str: string) => {
-  const matches = str.matchAll(/(\w+):\s*([^,\n]+)/g)
-
-  const map: Record<string, string> = {}
-
-  for (const match of matches) {
-    map[match[1]] = filterVersion(match[2])
-  }
-
-  return map
-}
-
 const originUrl = 'https://esm.sh/'
 
 export const transformImportMap = (dependencies: string, url: string = originUrl) => {
+  const importMap: {
+    imports: Record<string, string>
+  } = {
+    imports: {}
+  }
 
-  const map = parseImportMap(dependencies)
+  try {
+    const map = JSON.parse(dependencies);
 
-  const imports = Object.entries(map).map(([key, value]) => {
-    return `"${key}": "${url}${key}@${value}"`
-  })
+    Object.entries(map).forEach(([key, value]) => {
+      const filteredValue = filterVersion(value as string);
 
-  const importMap = `
-{
-  "imports": ${imports}
+      importMap.imports[key] = filteredValue.includes('@') 
+        ? `${url}${filteredValue}` 
+        : `${url}${key}@${filteredValue}`;
+    });
+  } catch {
+
+  }
+
+  return JSON.stringify(importMap)
 }
-` 
-  return importMap
+
+type NestedObject = Record<string, any>;
+type FlattenedObject = Record<string, any>;
+
+export const flattenObject = (obj: NestedObject, parentPath: string = '', result: FlattenedObject = {}): FlattenedObject => {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const currentPath = parentPath ? `${parentPath}/${key}` : key;
+      if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+          flattenObject(obj[key], currentPath, result);
+      } else {
+          result[currentPath] = obj[key];
+      }
+    }
+  }
+  return result
 }

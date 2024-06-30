@@ -3,6 +3,7 @@ import { useStableFn } from "@shined/react-use";
 import { initFiles } from "../files";
 import type { IFiles } from "../types";
 import { fileNameToLanguage, utoa } from "@/utils/transform";
+import { changeUrlHash } from "@/utils/utils";
 
 export interface UseBoxContextProps {
   saveOnUrl: boolean
@@ -52,21 +53,8 @@ const useBoxContext = (props: UseBoxContextProps) => {
     setFilesHash(hash)
 
     if (!saveOnUrl) return
-    let originalHash = window.location.hash;
-    let hashParamsIndex = originalHash.indexOf('?');
-
-    let baseHash = (hashParamsIndex === -1) ? originalHash : originalHash.substring(0, hashParamsIndex);
-    let existingParams = (hashParamsIndex === -1) ? '' : originalHash.substring(hashParamsIndex + 1);
-
-    let searchParams = new URLSearchParams(existingParams);
-
-    searchParams.set('code', hash || '');
-
-    let newHash = `${baseHash}?${searchParams.toString()}`;
-
-    console.log('new URL:', `${window.location.pathname}${newHash}`);
-    window.history.pushState({}, '', `${window.location.pathname}${newHash}`);
     
+    changeUrlHash(hash)
   }, [files])
 
   return {
