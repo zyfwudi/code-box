@@ -6,7 +6,7 @@ import type { IPlayground } from './types'
 import useStyle from './style'
 
 const Playground: React.FC<IPlayground> = (props) => {
-  const { saveOnUrl, showHeader = true, className, style, ...rest } = props
+  const { saveOnUrl, showHeader = true, className, style, title, extraFunctions, ...rest } = props
 
   const styles = useStyle()
 
@@ -15,7 +15,7 @@ const Playground: React.FC<IPlayground> = (props) => {
   return (
     <BoxProvider saveOnUrl={saveOnUrl}>
       <div style={style} className={rootClassName}>
-        {showHeader && <Header />}
+        {showHeader && <Header title={title} extraFunctions={extraFunctions} />}
         <CodeBox {...rest} />
       </div>
     </BoxProvider>

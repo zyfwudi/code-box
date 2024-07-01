@@ -37,10 +37,12 @@ export interface IPlayground {
   className?: string
   showHeader?: boolean
   importUrl?: string
+  title?: React.ReactNode
+  extraFunctions?: React.ReactNode
   onFilesChange?: (url: string) => void
 }
 
-export interface ICodeBox extends Omit<IPlayground, 'saveOnUrl' | 'showHeader'> {
+export interface ICodeBox extends Omit<IPlayground, 'saveOnUrl' | 'showHeader' | 'extraFunctions' | 'title'> {
   
 }
 
